@@ -7,7 +7,17 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+select{
 
+width:100%;
+
+padding:12px;
+
+border-radius:8px;
+
+margin-bottom:10px;
+
+}
 <style>
 
 body{
@@ -73,6 +83,15 @@ Not Connected
 
 <h2>Submit Feedback</h2>
 
+<select id="category">
+<option>Feature Request</option>
+<option>Bug Report</option>
+<option>UI/UX Feedback</option>
+<option>General Idea</option>
+</select>
+
+<br><br>
+
 <textarea id="feedbackInput"
 placeholder="Share your idea or feedback...">
 </textarea>
@@ -137,6 +156,24 @@ return;
 
 }
 
+function upvote(btn){
+
+let count =
+
+parseInt(
+
+btn.innerText.replace("👍 ","")
+
+);
+
+count++;
+
+btn.innerText =
+
+"👍 " + count;
+
+}
+
 let list=
 document.getElementById("feedbackList");
 
@@ -146,7 +183,20 @@ document.createElement("div");
 item.className="feedback";
 
 item.innerHTML=
-"<b>"+wallet+"</b><br><br>"+text;
+
+"<b>"+wallet+"</b><br>" +
+
+"<small>" +
+
+document.getElementById('category').value +
+
+"</small><br><br>" +
+
+text +
+
+"<br><br>" +
+
+"<button onclick='upvote(this)'>👍 0</button>";
 
 list.prepend(item);
 
