@@ -175,6 +175,8 @@ text +
 
 list.prepend(item);
 
+saveFeedback();
+
 document.getElementById("feedbackInput").value="";
 
 }
@@ -188,7 +190,34 @@ count++;
 
 btn.innerText="👍 "+count;
 
+saveFeedback();
+
 }
+
+function saveFeedback(){
+
+localStorage.setItem(
+"arcFeedback",
+document.getElementById("feedbackList").innerHTML
+);
+
+}
+
+function loadFeedback(){
+
+let saved =
+localStorage.getItem("arcFeedback");
+
+if(saved){
+
+document.getElementById("feedbackList").innerHTML =
+saved;
+
+}
+
+}
+
+loadFeedback();
 
 </script>
 
