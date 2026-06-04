@@ -1,27 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>Arc Feedback Hub</title>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
-select{
 
-width:100%;
-
-padding:12px;
-
-border-radius:8px;
-
-margin-bottom:10px;
-
-}
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#0f172a;
 color:white;
 max-width:900px;
@@ -45,11 +32,22 @@ border-radius:8px;
 cursor:pointer;
 }
 
+button:hover{
+opacity:0.9;
+}
+
+select{
+width:100%;
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
 textarea{
 width:100%;
 height:120px;
 padding:10px;
-margin-top:10px;
+border-radius:8px;
 }
 
 .feedback{
@@ -60,12 +58,11 @@ margin-top:10px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>Arc Feedback Hub</h1>
+<h1>🚀 Arc Feedback Hub</h1>
 
 <p>
 Share feedback, ideas, and suggestions with the Arc community.
@@ -90,8 +87,6 @@ Not Connected
 <option>General Idea</option>
 </select>
 
-<br><br>
-
 <textarea id="feedbackInput"
 placeholder="Share your idea or feedback...">
 </textarea>
@@ -99,7 +94,7 @@ placeholder="Share your idea or feedback...">
 <br><br>
 
 <button onclick="submitFeedback()">
-Submit
+Submit Feedback
 </button>
 
 </div>
@@ -124,7 +119,7 @@ async function connectWallet(){
 
 if(!window.ethereum){
 
-alert("Install MetaMask");
+alert("Please install MetaMask");
 
 return;
 
@@ -137,65 +132,45 @@ method:"eth_requestAccounts"
 
 wallet=accounts[0];
 
-document.getElementById("wallet")
-.innerText=
-"Connected: "+wallet;
+document.getElementById("wallet").innerText=
+"Connected: " + wallet;
 
 }
 
 function submitFeedback(){
 
-let text=
+let text =
 document.getElementById("feedbackInput").value;
 
-if(text===""){
+let category =
+document.getElementById("category").value;
 
-alert("Enter feedback");
+if(text.trim()===""){
+
+alert("Please enter feedback");
 
 return;
 
 }
 
-function upvote(btn){
+let list =
+document.getElementById("feedbackList");
 
-let count =
+if(list.innerHTML==="No feedback yet."){
 
-parseInt(
-
-btn.innerText.replace("👍 ","")
-
-);
-
-count++;
-
-btn.innerText =
-
-"👍 " + count;
+list.innerHTML="";
 
 }
 
-let list=
-document.getElementById("feedbackList");
-
-let item=
+let item =
 document.createElement("div");
 
 item.className="feedback";
 
 item.innerHTML=
-
-"<b>"+wallet+"</b><br>" +
-
-"<small>" +
-
-document.getElementById('category').value +
-
-"</small><br><br>" +
-
+"<b>"+category+"</b><br><br>" +
 text +
-
 "<br><br>" +
-
 "<button onclick='upvote(this)'>👍 0</button>";
 
 list.prepend(item);
@@ -204,8 +179,18 @@ document.getElementById("feedbackInput").value="";
 
 }
 
+function upvote(btn){
+
+let count =
+parseInt(btn.innerText.replace("👍 ",""));
+
+count++;
+
+btn.innerText="👍 "+count;
+
+}
+
 </script>
 
 </body>
-
 </html>
