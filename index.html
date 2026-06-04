@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Arc Feedback Hub</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+}
+
+button{
+background:#22c55e;
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+textarea{
+width:100%;
+height:120px;
+padding:10px;
+margin-top:10px;
+}
+
+.feedback{
+background:#334155;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Arc Feedback Hub</h1>
+
+<p>
+Share feedback, ideas, and suggestions with the Arc community.
+</p>
+
+<button onclick="connectWallet()">
+Connect Wallet
+</button>
+
+<p id="wallet">
+Not Connected
+</p>
+
+<div class="card">
+
+<h2>Submit Feedback</h2>
+
+<textarea id="feedbackInput"
+placeholder="Share your idea or feedback...">
+</textarea>
+
+<br><br>
+
+<button onclick="submitFeedback()">
+Submit
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Community Feedback</h2>
+
+<div id="feedbackList">
+
+No feedback yet.
+
+</div>
+
+</div>
+
+<script>
+
+let wallet="";
+
+async function connectWallet(){
+
+if(!window.ethereum){
+
+alert("Install MetaMask");
+
+return;
+
+}
+
+const accounts =
+await ethereum.request({
+method:"eth_requestAccounts"
+});
+
+wallet=accounts[0];
+
+document.getElementById("wallet")
+.innerText=
+"Connected: "+wallet;
+
+}
+
+function submitFeedback(){
+
+let text=
+document.getElementById("feedbackInput").value;
+
+if(text===""){
+
+alert("Enter feedback");
+
+return;
+
+}
+
+let list=
+document.getElementById("feedbackList");
+
+let item=
+document.createElement("div");
+
+item.className="feedback";
+
+item.innerHTML=
+"<b>"+wallet+"</b><br><br>"+text;
+
+list.prepend(item);
+
+document.getElementById("feedbackInput").value="";
+
+}
+
+</script>
+
+</body>
+
+</html>
