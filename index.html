@@ -82,6 +82,36 @@ function submitIdea(){
  data.unshift({builder,category,idea,votes:0});
  saveData(data);
  document.getElementById('idea').value='';
+
+if(getData().length===0){
+
+saveData([
+
+{
+builder:"Remesh",
+category:"Builder Idea",
+idea:"Create a builder showcase section.",
+votes:5
+},
+
+{
+builder:"Alex",
+category:"Feature Request",
+idea:"Add wallet-based builder profiles.",
+votes:3
+},
+
+{
+builder:"Sarah",
+category:"Community Proposal",
+idea:"Launch weekly demo days.",
+votes:7
+}
+
+]);
+
+}
+ 
  render();
 }
 
