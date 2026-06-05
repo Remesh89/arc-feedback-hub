@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arc Builder Board</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:#fff}
+.header{padding:20px;background:#111827;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;padding:20px}
+.card{background:#1f2937;padding:18px;border-radius:12px}
+.container{max-width:1100px;margin:auto;padding:20px}
+input,select,textarea{width:100%;padding:10px;border-radius:8px;border:none;margin:8px 0}
+button{background:#22c55e;color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer}
+.feed-item{background:#1f2937;padding:15px;border-radius:10px;margin-top:10px}
+.small{color:#9ca3af;font-size:12px}
+.footer{text-align:center;padding:20px;color:#9ca3af}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🚀 Arc Builder Board</h1>
+<p>Community ideas, feedback, and builder collaboration</p>
+<button onclick="connectWallet()">Connect Wallet</button>
+<p id="wallet">Not Connected</p>
+</div>
+
+<div class="grid">
+<div class="card"><h3 id="ideas">0</h3><p>Total Ideas</p></div>
+<div class="card"><h3 id="votes">0</h3><p>Total Upvotes</p></div>
+<div class="card"><h3 id="builders">0</h3><p>Builders</p></div>
+<div class="card"><h3 id="trend">0</h3><p>Trending Score</p></div>
+</div>
+
+<div class="container">
+<div class="card">
+<h2>Submit an Idea</h2>
+<input id="builder" placeholder="Builder Name">
+<select id="category">
+<option>Feature Request</option>
+<option>Bug Report</option>
+<option>Builder Idea</option>
+<option>Community Proposal</option>
+</select>
+<textarea id="idea" rows="4" placeholder="Share your idea"></textarea>
+<button onclick="submitIdea()">Submit</button>
+</div>
+
+<div class="card">
+<h2>🏆 Leaderboard</h2>
+<div id="leaderboard">No builders yet</div>
+</div>
+
+<div class="card">
+<h2>🔥 Community Feed</h2>
+<div id="feed"></div>
+</div>
+</div>
+
+<div class="footer">Built by Remesh</div>
+
+<script>
+let wallet="";
+
+async function connectWallet(){
+ if(window.ethereum){
+  const acc=await ethereum.request({method:'eth_requestAccounts'});
+  wallet=acc[0];
+  document.getElementById('wallet').innerText='Connected: '+wallet;
+ } else alert('Install MetaMask');
+}
+
+function getData(){return JSON.parse(localStorage.getItem('arcBoard')||'[]');}
+function saveData(d){localStorage.setItem('arcBoard',JSON.stringify(d));}
+
+function submitIdea(){
+ const builder=document.getElementById('builder').value||'Anonymous';
+ const category=document.getElementById('category').value;
+ const idea=document.getElementById('idea').value;
+ if(!idea.trim()) return alert('Enter an idea');
+ let data=getData();
+ data.unshift({builder,category,idea,votes:0});
+ saveData(data);
+ document.getElementById('idea').value='';
+ render();
+}
+
+function upvote(i){
+ let data=getData();
+ data[i].votes++;
+ saveData(data);
+ render();
+}
+
+function render(){
+ let data=getData();
+ let feed=document.getElementById('feed');
+ feed.innerHTML='';
+ let totalVotes=0;
+ let builders={};
+
+ data.forEach((x,i)=>{
+  totalVotes+=x.votes;
+  builders[x.builder]=(builders[x.builder]||0)+x.votes;
+
+  feed.innerHTML+=`<div class="feed-item">
+  <b>${x.builder}</b> <span class="small">(${x.category})</span>
+  <p>${x.idea}</p>
+  <button onclick="upvote(${i})">👍 ${x.votes}</button>
+  </div>`;
+ });
+
+ document.getElementById('ideas').innerText=data.length;
+ document.getElementById('votes').innerText=totalVotes;
+ document.getElementById('builders').innerText=Object.keys(builders).length;
+ document.getElementById('trend').innerText=totalVotes + data.length;
+
+ let board=Object.entries(builders).sort((a,b)=>b[1]-a[1]);
+ document.getElementById('leaderboard').innerHTML =
+ board.length ? board.map(x=>`${x[0]} — ${x[1]} pts`).join('<br>') : 'No builders yet';
+}
+
+render();
+</script>
+</body>
+</html>
